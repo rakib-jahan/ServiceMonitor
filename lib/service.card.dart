@@ -3,7 +3,6 @@ import 'package:service_monitor/service.details.dart';
 import 'package:service_monitor/service.model.dart';
 
 class ServiceCard extends StatefulWidget {
-
   final Service service;
 
   const ServiceCard({Key key, this.service}) : super(key: key);
@@ -46,14 +45,14 @@ class _ServiceCardState extends State<ServiceCard> {
                         fontWeight: FontWeight.bold)),
                 Container(
                     height: 40, child: VerticalDivider(color: Colors.grey)),
-                Text(widget.service.errorCount.toString(),
+                Text(widget.service.failedCount.toString(),
                     style: TextStyle(
                         fontSize: 50,
                         color: Colors.red,
                         fontWeight: FontWeight.bold))
               ],
             ),
-            Text(widget.service.lastRun,
+            Text(widget.service.lastUpdate,
                 style: TextStyle(
                     fontSize: 15,
                     color: Colors.grey,

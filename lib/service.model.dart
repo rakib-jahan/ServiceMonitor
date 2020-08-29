@@ -1,11 +1,25 @@
-class Service{
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
-  int id;
+class Service {
   String serviceName;
-  String lastRun;
+  String lastUpdate;
   int successCount;
-  int errorCount;
+  int failedCount;
 
-  Service({ this.id, this.serviceName, this.lastRun, this.successCount, this.errorCount});
-  
+  Service(
+      {this.serviceName, this.lastUpdate, this.successCount, this.failedCount});
+
+  static Service fromMap(Map<String, dynamic> map, String serviceName) {
+    if (map == null) return null;
+
+    Timestamp t = map['lastUpdate'];
+    DateTime d = t.toDate();
+
+    return Service(
+        lastUpdate: DateFormat.yMMMd().add_jm().format(d),
+        serviceName: serviceName,
+        successCount: map['successCount'],
+        failedCount: map['failedCount']);
+  }
 }

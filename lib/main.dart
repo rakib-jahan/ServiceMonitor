@@ -14,23 +14,20 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   List<Service> services = [
     Service(
-        id: 1,
         serviceName: 'Service 1',
-        lastRun: '12-Aug-2020 11 AM',
-        errorCount: 7,
+        lastUpdate: '12-Aug-2020 11 AM',
+        failedCount: 7,
         successCount: 17),
     Service(
-        id: 2,
         serviceName: 'Service 2',
-        lastRun: '12-Aug-2020 9 AM',
-        errorCount: 88,
-        successCount: 99),
+        lastUpdate: '12-Aug-2020 11 AM',
+        failedCount: 7,
+        successCount: 17),
     Service(
-        id: 3,
         serviceName: 'Service 3',
-        lastRun: '12-Aug-2020 10 PM',
-        errorCount: 0,
-        successCount: 11)
+        lastUpdate: '12-Aug-2020 11 AM',
+        failedCount: 7,
+        successCount: 17),
   ];
 
   @override
