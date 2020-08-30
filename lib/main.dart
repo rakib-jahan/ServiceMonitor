@@ -73,14 +73,12 @@ class _DashboardState extends State<Dashboard> {
                 FirebaseFirestore.instance.collection('services').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: Text('Loading ...'),
-                );
+                String text = 'Loading ...';
+                return CardMessage(text: text);
               }
               if (!snapshot.hasData) {
-                return Center(
-                  child: Text('No data ...'),
-                );
+                String text = 'No data ...';
+                return CardMessage(text: text);
               }
               return GridView.builder(
                   padding: EdgeInsets.all(5.0),
@@ -96,5 +94,31 @@ class _DashboardState extends State<Dashboard> {
             }),
       ),
     );
+  }
+}
+
+class CardMessage extends StatelessWidget {
+  const CardMessage({
+    Key key,
+    @required this.text,
+  }) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Card(
+      child: Container(
+        width: 200,
+        height: 50,
+        child: Center(
+            child: Text(text,
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey[800],
+                    fontWeight: FontWeight.w500))),
+      ),
+    ));
   }
 }

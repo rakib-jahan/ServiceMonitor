@@ -12,14 +12,19 @@ class Service {
 
   static Service fromMap(Map<String, dynamic> map, String serviceName) {
     if (map == null) return null;
-
-    Timestamp t = map['lastUpdate'];
-    DateTime d = t.toDate();
+    String lastUpdate;
+    if (map['lastUpdate'] == null)
+      lastUpdate = 'Service off';
+    else {
+      Timestamp t = map['lastUpdate'];
+      DateTime d = t.toDate();
+      lastUpdate = DateFormat.yMMMd().add_jm().format(d);
+    }
 
     return Service(
-        lastUpdate: DateFormat.yMMMd().add_jm().format(d),
+        lastUpdate: lastUpdate,
         serviceName: serviceName,
-        successCount: map['successCount'],
-        failedCount: map['failedCount']);
+        successCount: map['successCount'] == null ? 0 : map['successCount'],
+        failedCount: map['failedCount'] == null ? 0 : map['failedCount']);
   }
 }
