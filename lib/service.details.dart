@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:service_monitor/card_message.dart';
 import 'package:service_monitor/service.model.dart';
 
+import 'firestore.service.dart';
+
 class ServiceDetails extends StatefulWidget {
   final Service item;
 
@@ -13,21 +15,10 @@ class ServiceDetails extends StatefulWidget {
 }
 
 class _ServiceDetailsState extends State<ServiceDetails> {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future getServiceDetails() async {
-    Query query = _firestore
-        .collection('services')
-        .doc(widget.item.serviceName)
-        .collection('all-log');
-    QuerySnapshot snapshot = await query.get();
-    return snapshot.docs;
-  }
-
+  FirestoreService _service = FirestoreService();
   @override
   void initState() {
     super.initState();
-    getServiceDetails();
   }
 
   @override
@@ -39,7 +30,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
       ),
       body: Center(
         child: FutureBuilder(
-          future: getServiceDetails(),
+          future: _service.getServiceLogs(widget.item.serviceName),
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               String text = 'Loading ...';
