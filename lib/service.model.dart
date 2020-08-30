@@ -28,3 +28,44 @@ class Service {
         failedCount: map['failedCount'] == null ? 0 : map['failedCount']);
   }
 }
+
+class ServiceLogDetails {
+  String createdDate;
+  String failedDetails;
+  double cpu;
+  double disk;
+  double memory;
+  Status logType;
+  ServiceLogDetails(
+      {this.createdDate,
+      this.failedDetails,
+      this.cpu,
+      this.memory,
+      this.disk,
+      this.logType});
+
+  static ServiceLogDetails fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+    String createdDate;
+    if (map['createdDate'] == null)
+      createdDate = 'Service off';
+    else {
+      Timestamp t = map['createdDate'];
+      DateTime d = t.toDate();
+      createdDate = DateFormat.yMMMd().add_jm().format(d);
+    }
+
+    return ServiceLogDetails(
+        createdDate: createdDate,
+        failedDetails: map['failedDetails'] == null ? '' : map['failedDetails'],
+        cpu: map['cpu'] == null ? 0 : double.parse(map['cpu'].toString()),
+        memory:
+            map['memory'] == null ? 0 : double.parse(map['memory'].toString()),
+        disk: map['disk'] == null ? 0 : double.parse(map['disk'].toString()),
+        logType: map['logType'] == null
+            ? Status.none
+            : Status.values[int.parse(map['logType'].toString())]);
+  }
+}
+
+enum Status { none, success, failed, stopped }

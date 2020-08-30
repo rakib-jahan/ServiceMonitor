@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:service_monitor/card_message.dart';
 import 'package:service_monitor/service.card.dart';
 import 'service.model.dart';
 
@@ -34,25 +35,8 @@ class _DashboardState extends State<Dashboard> {
         successCount: 17),
   ];
 
-  bool _initialized = false;
-  bool _error = false;
-
-  void initializeFlutterFire() async {
-    try {
-      await Firebase.initializeApp();
-      setState(() {
-        _initialized = true;
-      });
-    } catch (e) {
-      setState(() {
-        _error = true;
-      });
-    }
-  }
-
   @override
   void initState() {
-    initializeFlutterFire();
     super.initState();
   }
 
@@ -94,31 +78,5 @@ class _DashboardState extends State<Dashboard> {
             }),
       ),
     );
-  }
-}
-
-class CardMessage extends StatelessWidget {
-  const CardMessage({
-    Key key,
-    @required this.text,
-  }) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: Card(
-      child: Container(
-        width: 200,
-        height: 50,
-        child: Center(
-            child: Text(text,
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey[800],
-                    fontWeight: FontWeight.w500))),
-      ),
-    ));
   }
 }
