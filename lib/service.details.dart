@@ -44,6 +44,9 @@ class _ServiceDetailsState extends State<ServiceDetails> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               String text = 'Loading ...';
               return CardMessage(text: text);
+            } else if (!snapshot.hasData) {
+              String text = 'No data ...';
+              return CardMessage(text: text);
             } else {
               return ListView.builder(
                 itemCount: snapshot.data.length,
@@ -51,7 +54,24 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                   DocumentSnapshot ds = snapshot.data[index];
                   ServiceLogDetails service =
                       ServiceLogDetails.fromMap(ds.data());
-                  return ListTile(title: Text(service.logType.toString()));
+                  return Card(
+                    child: ListTile(
+                      leading: service.logType == Status.failed
+                          ? Icon(
+                              Icons.error,
+                              color: Colors.red[800],
+                              size: 45,
+                            )
+                          : Icon(Icons.check_circle,
+                              color: Colors.teal, size: 45),
+                      title: Text(service.createdDate),
+                      subtitle: service.logType == Status.failed
+                          ? Text(service.failedDetails)
+                          : Text(''),
+                      isThreeLine: true,
+                      dense: true,
+                    ),
+                  );
                 },
               );
             }
