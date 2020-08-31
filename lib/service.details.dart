@@ -29,8 +29,12 @@ class _ServiceDetailsState extends State<ServiceDetails> {
         title: Text(widget.item.serviceName),
       ),
       body: Center(
-        child: FutureBuilder(
-          future: _service.getServiceLogs(widget.item.serviceName),
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('services')
+              .doc(widget.item.serviceName)
+              .collection('all-log')
+              .snapshots(),
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               String text = 'Loading ...';
@@ -40,9 +44,9 @@ class _ServiceDetailsState extends State<ServiceDetails> {
               return CardMessage(text: text);
             } else {
               return ListView.builder(
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data.docs.length,
                 itemBuilder: (_, index) {
-                  DocumentSnapshot ds = snapshot.data[index];
+                  DocumentSnapshot ds = snapshot.data.docs[index];
                   ServiceLogDetails service =
                       ServiceLogDetails.fromMap(ds.data());
                   return Card(
