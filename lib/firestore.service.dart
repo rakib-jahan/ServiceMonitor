@@ -1,12 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:service_monitor/service.model.dart';
 
 class FirestoreService {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  CollectionReference _collectionReference =
+      FirebaseFirestore.instance.collection('services');
 
-  Future getServiceLogs(String id) async {
-    Query query =
-        _firestore.collection('services').doc(id).collection('all-log');
-    QuerySnapshot snapshot = await query.get();
-    return snapshot.docs;
+  List<Service> getServicesFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Service.fromMap(doc.data(), doc.id);
+    }).toList();
+  }
+
+  Stream<List<Service>> getServices() {
+    return _collectionReference.snapshots().map(getServicesFromSnapshot);
+  }
+
+  List<ServiceLogDetails> getServiceLogDetailsFromSnapshot(
+      QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return ServiceLogDetails.fromMap(doc.data());
+    }).toList();
+  }
+
+  Stream<List<ServiceLogDetails>> getServiceLogDetails(String id) {
+    return _collectionReference
+        .doc(id)
+        .collection('all-log')
+        .snapshots()
+        .map(getServiceLogDetailsFromSnapshot);
   }
 }

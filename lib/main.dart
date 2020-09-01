@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:service_monitor/card_message.dart';
+import 'package:service_monitor/firestore.service.dart';
 import 'package:service_monitor/service.card.dart';
 import 'service.model.dart';
 
@@ -17,23 +17,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<Service> services = [
-    Service(
-        serviceName: 'Service 1',
-        lastUpdate: '12-Aug-2020 11 AM',
-        failedCount: 7,
-        successCount: 17),
-    Service(
-        serviceName: 'Service 2',
-        lastUpdate: '12-Aug-2020 11 AM',
-        failedCount: 7,
-        successCount: 17),
-    Service(
-        serviceName: 'Service 3',
-        lastUpdate: '12-Aug-2020 11 AM',
-        failedCount: 7,
-        successCount: 17),
-  ];
+  FirestoreService _service = FirestoreService();
 
   @override
   void initState() {
@@ -52,9 +36,8 @@ class _DashboardState extends State<Dashboard> {
           centerTitle: true,
           title: Text(title),
         ),
-        body: StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collection('services').snapshots(),
+        body: StreamBuilder<List<Service>>(
+            stream: _service.getServices(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 String text = 'Loading ...';
@@ -66,13 +49,12 @@ class _DashboardState extends State<Dashboard> {
               }
               return GridView.builder(
                   padding: EdgeInsets.all(5.0),
-                  itemCount: snapshot.data.docs.length,
+                  itemCount: snapshot.data.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                   ),
                   itemBuilder: (context, index) {
-                    DocumentSnapshot ds = snapshot.data.docs[index];
-                    Service service = Service.fromMap(ds.data(), ds.id);
+                    Service service = snapshot.data[index];
                     return ServiceCard(service: service);
                   });
             }),

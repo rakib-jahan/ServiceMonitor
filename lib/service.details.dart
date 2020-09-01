@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:service_monitor/card_message.dart';
 import 'package:service_monitor/service.model.dart';
@@ -29,12 +28,8 @@ class _ServiceDetailsState extends State<ServiceDetails> {
         title: Text(widget.item.serviceName),
       ),
       body: Center(
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('services')
-              .doc(widget.item.serviceName)
-              .collection('all-log')
-              .snapshots(),
+        child: StreamBuilder<List<ServiceLogDetails>>(
+          stream: _service.getServiceLogDetails(widget.item.serviceName),
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               String text = 'Loading ...';
@@ -44,11 +39,9 @@ class _ServiceDetailsState extends State<ServiceDetails> {
               return CardMessage(text: text);
             } else {
               return ListView.builder(
-                itemCount: snapshot.data.docs.length,
+                itemCount: snapshot.data.length,
                 itemBuilder: (_, index) {
-                  DocumentSnapshot ds = snapshot.data.docs[index];
-                  ServiceLogDetails service =
-                      ServiceLogDetails.fromMap(ds.data());
+                  ServiceLogDetails service = snapshot.data[index];
                   return Card(
                     child: ListTile(
                       leading: service.logType == Status.failed
