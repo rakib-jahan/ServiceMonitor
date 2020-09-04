@@ -42,22 +42,64 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (_, index) {
                   ServiceLogDetails service = snapshot.data[index];
+                  int memory = service.memory == 0
+                      ? 0
+                      : ((service.memory * 100) / widget.item.ram).ceil();
+                  int cpu = service.cpu == 0
+                      ? 0
+                      : ((service.cpu * 100) / widget.item.cpu).ceil();
+
                   return Card(
-                    child: ListTile(
-                      leading: service.logType == Status.failed
-                          ? Icon(
-                              Icons.error,
-                              color: Colors.red[800],
-                              size: 45,
-                            )
-                          : Icon(Icons.check_circle,
-                              color: Colors.teal, size: 45),
-                      title: Text(service.createdDate),
-                      subtitle: service.logType == Status.failed
-                          ? Text(service.failedDetails)
-                          : Text(''),
-                      isThreeLine: true,
-                      dense: true,
+                    margin: EdgeInsets.all(5),
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16),
+                      child: Row(
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              SizedBox(height: 10),
+                              Text(service.createdDate,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400)),
+                              SizedBox(height: 5),
+                              Text(service.failedDetails,
+                                  style: TextStyle(color: Colors.grey)),
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(Icons.memory, color: Colors.green[500]),
+                                  SizedBox(width: 2),
+                                  Text('$cpu %',
+                                      style: TextStyle(color: Colors.grey)),
+                                  SizedBox(width: 15),
+                                  Icon(Icons.sim_card,
+                                      color: Colors.green[500]),
+                                  SizedBox(width: 2),
+                                  Text('$memory %',
+                                      style: TextStyle(color: Colors.grey)),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                            ],
+                          ),
+                          Spacer(),
+                          service.logType == Status.failed
+                              ? Icon(
+                                  Icons.error,
+                                  color: Colors.red[800],
+                                  size: 40,
+                                )
+                              : Icon(Icons.check_circle,
+                                  color: Colors.teal, size: 40),
+                        ],
+                      ),
                     ),
                   );
                 },

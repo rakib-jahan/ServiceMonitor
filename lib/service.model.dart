@@ -6,9 +6,16 @@ class Service {
   String lastUpdate;
   int successCount;
   int failedCount;
+  double cpu;
+  double ram;
 
   Service(
-      {this.serviceName, this.lastUpdate, this.successCount, this.failedCount});
+      {this.serviceName,
+      this.lastUpdate,
+      this.successCount,
+      this.failedCount,
+      this.cpu,
+      this.ram});
 
   static Service fromMap(Map<String, dynamic> map, String serviceName) {
     if (map == null) return null;
@@ -22,10 +29,13 @@ class Service {
     }
 
     return Service(
-        lastUpdate: lastUpdate,
-        serviceName: serviceName,
-        successCount: map['successCount'] == null ? 0 : map['successCount'],
-        failedCount: map['failedCount'] == null ? 0 : map['failedCount']);
+      lastUpdate: lastUpdate,
+      serviceName: serviceName,
+      successCount: map['successCount'] == null ? 0 : map['successCount'],
+      failedCount: map['failedCount'] == null ? 0 : map['failedCount'],
+      cpu: map['cpu'] == null ? 0 : double.parse(map['cpu'].toString()),
+      ram: map['ram'] == null ? 0 : double.parse(map['ram'].toString()),
+    );
   }
 }
 
